@@ -23,7 +23,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	DWORD PID = _ttoi(argv[1]);
 	HANDLE h1 = OpenProcess(SYNCHRONIZE, 0, PID);
 
-	// Получение глобального буфера
+	// РџРѕР»СѓС‡РµРЅРёРµ РіР»РѕР±Р°Р»СЊРЅРѕРіРѕ Р±СѓС„РµСЂР°
 	HANDLE hMapFile = (HANDLE)_ttoi(argv[2]);
 
 	circBuf * cBuf = 0;
@@ -39,14 +39,14 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 		return 2;
 	}
 
-	// Получение семафора взаимного исключения
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° РІР·Р°РёРјРЅРѕРіРѕ РёСЃРєР»СЋС‡РµРЅРёСЏ
 	HANDLE hSemExc = (HANDLE)_ttoi(argv[3]);
-	// Получение семафора буфер пуст
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° Р±СѓС„РµСЂ РїСѓСЃС‚
 	HANDLE hSemFree = (HANDLE)_ttoi(argv[4]);
-	// Получение семафора буфер полон
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° Р±СѓС„РµСЂ РїРѕР»РѕРЅ
 	HANDLE hSemBusy = (HANDLE)_ttoi(argv[5]);
 
-	// Работа производителя
+	// Р Р°Р±РѕС‚Р° РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЏ
 	_tprintf(TEXT("#### PRODUCER ####\n"));
 
 	for (int i = 0; i < 15; i++)
@@ -72,7 +72,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	
 	_tprintf(TEXT("#### END ####\n(Press any bytton to exit)"));
 	getch();
-	// Закрытие приложения
+	// Р—Р°РєСЂС‹С‚РёРµ РїСЂРёР»РѕР¶РµРЅРёСЏ
 	UnmapViewOfFile((LPCVOID)cBuf);
 	CloseHandle(hMapFile);
 	CloseHandle(hSemFree);
