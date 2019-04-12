@@ -20,11 +20,11 @@ struct circBuf {
 
 int __cdecl _tmain(int argc, TCHAR *argv[])
 {
-	// Открытие процесса
+	// РћС‚РєСЂС‹С‚РёРµ РїСЂРѕС†РµСЃСЃР°
 	DWORD PID = _ttoi(argv[1]);
 	HANDLE h1 = OpenProcess(SYNCHRONIZE, 0, PID);
 
-	// Получение дескриптора распределяемого ресурса
+	// РџРѕР»СѓС‡РµРЅРёРµ РґРµСЃРєСЂРёРїС‚РѕСЂР° СЂР°СЃРїСЂРµРґРµР»СЏРµРјРѕРіРѕ СЂРµСЃСѓСЂСЃР°
 	HANDLE hMapFile = (HANDLE)_ttoi(argv[2]);
 
 	circBuf * cBuf = 0;
@@ -40,14 +40,14 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 		return 2;
 	}
 
-	// Получение семафора взаимного исключения
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° РІР·Р°РёРјРЅРѕРіРѕ РёСЃРєР»СЋС‡РµРЅРёСЏ
 	HANDLE hSemExc = (HANDLE)_ttoi(argv[3]);
-	// Получение семафора буфер пуст
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° Р±СѓС„РµСЂ РїСѓСЃС‚
 	HANDLE hSemFree = (HANDLE)_ttoi(argv[4]);
-	// Получение семафора буфер полон
+	// РџРѕР»СѓС‡РµРЅРёРµ СЃРµРјР°С„РѕСЂР° Р±СѓС„РµСЂ РїРѕР»РѕРЅ
 	HANDLE hSemBusy = (HANDLE)_ttoi(argv[5]);
 
-	// Работа производителя
+	// Р Р°Р±РѕС‚Р° РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЏ
 	_tprintf(TEXT("#### CONSUMER ####\n"));
 
 	for (int i = 0; i < 15; i++)
@@ -71,9 +71,9 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 		Sleep(4000);
 	}
 
-	_tprintf(TEXT("#### END ####\n(Press any bytton to еxit)"));
+	_tprintf(TEXT("#### END ####\n(Press any bytton to ГҐxit)"));
 	getch();
-	// Закрытие всех дескрипторов
+	// Р—Р°РєСЂС‹С‚РёРµ РІСЃРµС… РґРµСЃРєСЂРёРїС‚РѕСЂРѕРІ
 	UnmapViewOfFile((LPCVOID)cBuf);
 	CloseHandle(hMapFile);
 	CloseHandle(hSemFree);
