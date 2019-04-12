@@ -19,7 +19,7 @@ struct circBuf {
 
 int __cdecl _tmain(int argc, TCHAR *argv[])
 {
-	// Описание процесса "Производитель"
+	// РћРїРёСЃР°РЅРёРµ РїСЂРѕС†РµСЃСЃР° "РџСЂРѕРёР·РІРѕРґРёС‚РµР»СЊ"
 	STARTUPINFO siProducer = { sizeof(siProducer) };
 	ZeroMemory(&siProducer, sizeof(siProducer));
 	siProducer.cb = sizeof(siProducer);
@@ -27,7 +27,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	PROCESS_INFORMATION piProducer;
 	ZeroMemory(&piProducer, sizeof(piProducer));
 
-	// Описание процесса "Потребитель"
+	// ГЋГЇГЁГ±Г Г­ГЁГҐ ГЇГ°Г®Г¶ГҐГ±Г±Г  "ГЏГ®ГІГ°ГҐГЎГЁГІГҐГ«Гј"
 	STARTUPINFO siConsumer = { sizeof(siConsumer) };
 	ZeroMemory(&siConsumer, sizeof(siConsumer));
 	siConsumer.cb = sizeof(siConsumer);
@@ -35,12 +35,12 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	PROCESS_INFORMATION piConsumer;
 	ZeroMemory(&piConsumer, sizeof(piConsumer));
 
-	// Получение ID главного процесса
+	// ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ ID ГЈГ«Г ГўГ­Г®ГЈГ® ГЇГ°Г®Г¶ГҐГ±Г±Г 
 	int processID = GetCurrentProcessId();
 	TCHAR bufPID[20];
 	_itot_s(processID, bufPID, sizeof(bufPID) / sizeof(TCHAR), 10);
 
-	// Создание проецируемого файла (разделяемая память между процессами)
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ ГЇГ°Г®ГҐГ¶ГЁГ°ГіГҐГ¬Г®ГЈГ® ГґГ Г©Г«Г  (Г°Г Г§Г¤ГҐГ«ГїГҐГ¬Г Гї ГЇГ Г¬ГїГІГј Г¬ГҐГ¦Г¤Гі ГЇГ°Г®Г¶ГҐГ±Г±Г Г¬ГЁ)
 	HANDLE hMapFile;
 
 	SECURITY_ATTRIBUTES sa;
@@ -74,7 +74,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR tCBuf[10];
 	_itot((int)hMapFile, tCBuf, 10);
 
-	// Создание семафора исключающего доступа
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ Г±ГҐГ¬Г ГґГ®Г°Г  ГЁГ±ГЄГ«ГѕГ·Г ГѕГ№ГҐГЈГ® Г¤Г®Г±ГІГіГЇГ 
 	HANDLE hSemExc = CreateSemaphore(&sa, 1, 1, NULL);
 	if (hSemExc == NULL)
 	{
@@ -85,7 +85,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemExc[10];
 	_itot((int)hSemExc, tSemExc, 10);
 
-	// Создание семафора буфер пуст
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ Г±ГҐГ¬Г ГґГ®Г°Г  ГЎГіГґГҐГ° ГЇГіГ±ГІ
 	HANDLE hSemFree = CreateSemaphore(&sa, 10, 10, NULL);
 	if (hSemFree == NULL)
 	{
@@ -97,7 +97,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemFree[10];
 	_itot((int)hSemFree, tSemFree, 10);
 
-	// Создание семафора буфер полон
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ Г±ГҐГ¬Г ГґГ®Г°Г  ГЎГіГґГҐГ° ГЇГ®Г«Г®Г­
 	HANDLE hSemBusy = CreateSemaphore(&sa, 0, 10, NULL);
 	if (hSemBusy == NULL)
 	{
@@ -110,7 +110,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemBusy[10];
 	_itot((int)hSemBusy, tSemBusy, 10);
 
-	// Создание процесса "Производитель"
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ ГЇГ°Г®Г¶ГҐГ±Г±Г  "ГЏГ°Г®ГЁГ§ГўГ®Г¤ГЁГІГҐГ«Гј"
 	TCHAR bufProducer[1000] = TEXT("Producer.exe \0");
 	TCHAR szCommandLineProducer[1000];
 	_tcscat(bufProducer, bufPID);
@@ -126,7 +126,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	if (!CreateProcess(0, szCommandLineProducer, 0, 0, TRUE, CREATE_SUSPENDED, 0, 0, &siProducer, &piProducer))
 		ExitProcess(1);
 
-	// Создание процесса "Потребитель"
+	// Г‘Г®Г§Г¤Г Г­ГЁГҐ ГЇГ°Г®Г¶ГҐГ±Г±Г  "ГЏГ®ГІГ°ГҐГЎГЁГІГҐГ«Гј"
 	TCHAR bufConsumer[1000] = TEXT("Consumer.exe \0");
 	TCHAR szCommandLineConsumer[1000];
 	_tcscat(bufConsumer, bufPID);
@@ -142,10 +142,10 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	if (!CreateProcess(0, szCommandLineConsumer, 0, 0, TRUE, CREATE_NEW_CONSOLE | CREATE_NEW_CONSOLE, 0, 0, &siConsumer, &piConsumer))
 		ExitProcess(1);
 
-	// Запуск работы процессов
+	// Г‡Г ГЇГіГ±ГЄ Г°Г ГЎГ®ГІГ» ГЇГ°Г®Г¶ГҐГ±Г±Г®Гў
 	ResumeThread(piProducer.hThread);
 	ResumeThread(piConsumer.hThread);
-	// Завершение работы программы
+	// Г‡Г ГўГҐГ°ГёГҐГ­ГЁГҐ Г°Г ГЎГ®ГІГ» ГЇГ°Г®ГЈГ°Г Г¬Г¬Г»
 	CloseHandle(piProducer.hThread);
 	CloseHandle(piConsumer.hThread);
 	CloseHandle(hSemExc);
