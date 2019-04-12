@@ -27,7 +27,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	PROCESS_INFORMATION piProducer;
 	ZeroMemory(&piProducer, sizeof(piProducer));
 
-	// Îïèñàíèå ïðîöåññà "Ïîòðåáèòåëü"
+	// Описание процесса "Потребитель"
 	STARTUPINFO siConsumer = { sizeof(siConsumer) };
 	ZeroMemory(&siConsumer, sizeof(siConsumer));
 	siConsumer.cb = sizeof(siConsumer);
@@ -35,12 +35,12 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	PROCESS_INFORMATION piConsumer;
 	ZeroMemory(&piConsumer, sizeof(piConsumer));
 
-	// Ïîëó÷åíèå ID ãëàâíîãî ïðîöåññà
+	// Получение ID главного процесса
 	int processID = GetCurrentProcessId();
 	TCHAR bufPID[20];
 	_itot_s(processID, bufPID, sizeof(bufPID) / sizeof(TCHAR), 10);
 
-	// Ñîçäàíèå ïðîåöèðóåìîãî ôàéëà (ðàçäåëÿåìàÿ ïàìÿòü ìåæäó ïðîöåññàìè)
+	// Создание проецируемого файла (разделяемая память между процессами)
 	HANDLE hMapFile;
 
 	SECURITY_ATTRIBUTES sa;
@@ -74,7 +74,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR tCBuf[10];
 	_itot((int)hMapFile, tCBuf, 10);
 
-	// Ñîçäàíèå ñåìàôîðà èñêëþ÷àþùåãî äîñòóïà
+	// Создание семафора исключающего доступа
 	HANDLE hSemExc = CreateSemaphore(&sa, 1, 1, NULL);
 	if (hSemExc == NULL)
 	{
@@ -85,7 +85,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemExc[10];
 	_itot((int)hSemExc, tSemExc, 10);
 
-	// Ñîçäàíèå ñåìàôîðà áóôåð ïóñò
+	// Создание семафора буфер пуст
 	HANDLE hSemFree = CreateSemaphore(&sa, 10, 10, NULL);
 	if (hSemFree == NULL)
 	{
@@ -97,7 +97,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemFree[10];
 	_itot((int)hSemFree, tSemFree, 10);
 
-	// Ñîçäàíèå ñåìàôîðà áóôåð ïîëîí
+	// Создание семафора буфер полон
 	HANDLE hSemBusy = CreateSemaphore(&sa, 0, 10, NULL);
 	if (hSemBusy == NULL)
 	{
@@ -110,7 +110,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	TCHAR  tSemBusy[10];
 	_itot((int)hSemBusy, tSemBusy, 10);
 
-	// Ñîçäàíèå ïðîöåññà "Ïðîèçâîäèòåëü"
+	// Создание процесса "Производитель"
 	TCHAR bufProducer[1000] = TEXT("Producer.exe \0");
 	TCHAR szCommandLineProducer[1000];
 	_tcscat(bufProducer, bufPID);
@@ -126,7 +126,7 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	if (!CreateProcess(0, szCommandLineProducer, 0, 0, TRUE, CREATE_SUSPENDED, 0, 0, &siProducer, &piProducer))
 		ExitProcess(1);
 
-	// Ñîçäàíèå ïðîöåññà "Ïîòðåáèòåëü"
+	// Создание процесса "Потребитель"
 	TCHAR bufConsumer[1000] = TEXT("Consumer.exe \0");
 	TCHAR szCommandLineConsumer[1000];
 	_tcscat(bufConsumer, bufPID);
@@ -142,10 +142,10 @@ int __cdecl _tmain(int argc, TCHAR *argv[])
 	if (!CreateProcess(0, szCommandLineConsumer, 0, 0, TRUE, CREATE_NEW_CONSOLE | CREATE_NEW_CONSOLE, 0, 0, &siConsumer, &piConsumer))
 		ExitProcess(1);
 
-	// Çàïóñê ðàáîòû ïðîöåññîâ
+	// Запуск работы процессов
 	ResumeThread(piProducer.hThread);
 	ResumeThread(piConsumer.hThread);
-	// Çàâåðøåíèå ðàáîòû ïðîãðàììû
+	// Завершение работы программы
 	CloseHandle(piProducer.hThread);
 	CloseHandle(piConsumer.hThread);
 	CloseHandle(hSemExc);
